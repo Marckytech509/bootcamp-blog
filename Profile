@@ -1,0 +1,1 @@
+web: gunicorn bootcampproject.wsgi --log-file -
