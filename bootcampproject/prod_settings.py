@@ -9,4 +9,4 @@ ALLOWED_HOSTS = ['bootcamp-blogger.herokuapp.com']
 
 MIDDLEWARE += ['whitenoise.middleware.WhiteNoiseMiddleware']
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
