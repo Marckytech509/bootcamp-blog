@@ -13,15 +13,53 @@ from django.template.loader import get_template
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-# Create your views here.
+from .forms import NewsUserForm, ContactForm
+from . models import NewsUsers, Contact
 
-def pageA(request):
+# Create your views here.
+def about(request):
     if request.user.is_authenticated:
-        posts = Post.objects.all()
-        return render(request, 'bcmp/acceuilU.html', {'posts': posts})
+        return render(request, 'bcmp/aboutU.html', {})
     else:
-        posts = Post.objects.all()
-        return render(request, 'bcmp/acceuil.html', {'posts': posts})
+        return render(request, 'bcmp/about.html', {})
+
+def newsletter_subscribe(request):
+  if request.method == 'POST':
+    form = NewsUserForm(request.POST)
+    if form.is_valid():
+      instance = form.save()
+      print('Votre email est envoyer avec succes')
+  else:
+    form = NewsUserForm()
+  context = {'emailform':form}
+  template = "bcmp/newslettersuccess.html"
+  return render(request, template, context)
+
+def contact(request):
+    if request.user.is_authenticated:
+      if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+          instance = form.save()
+          print('Votre message est envoyer avec succes')
+      else:
+        form = ContactForm()
+      context = {'contactform':form}
+      template = "bcmp/contactU.html"
+      return render(request, template, context)
+
+    else:
+      if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+          instance = form.save()
+          print('Votre message est envoyer avec succes')
+      else:
+        form = ContactForm()
+      context = {'contactform':form}
+      template = "bcmp/contact.html"
+      return render(request, template, context)
+
 
 
 def logout_user(request):
@@ -30,7 +68,7 @@ def logout_user(request):
 
 def login_user(request):
     if request.user.is_authenticated:
-        return render(request, 'bcmp/loginerror.html', {})
+        return render(request, 'bcmp/login_error.html', {})
     else:
         if request.method == "POST":
             username = request.POST['username']
@@ -68,11 +106,11 @@ def register(request):
     return render(request, 'bcmp/register.html', context)
 
 
-def post_list(request):
+def pageA(request):
     if request.user.is_authenticated:
         latest = Post.objects.order_by('-timestamp')[0:3]
         posts_list = Post.objects.all()
-        paginator = Paginator(posts_list, 2)
+        paginator = Paginator(posts_list, 5)
         page = request.GET.get('page')
         try:
             posts = paginator.page(page)
@@ -84,11 +122,11 @@ def post_list(request):
             'posts': posts,
             'paginate': True
         }
-        return render(request, 'bcmp/post_listU.html', {'posts': posts})
+        return render(request, 'bcmp/acceuilU.html', {'posts': posts})
     else:
         latest = Post.objects.order_by('-timestamp')[0:3]
         posts_list = Post.objects.all()
-        paginator = Paginator(posts_list, 2)
+        paginator = Paginator(posts_list, 5)
         page = request.GET.get('page')
         try:
             posts = paginator.page(page)
@@ -100,10 +138,10 @@ def post_list(request):
             'posts': posts,
             'paginate': True
         }
-        return render(request, 'bcmp/post_list.html', {'posts': posts})
+        return render(request, 'bcmp/acceuil.html', {'posts': posts})
     
 
-@login_required(login_url='/Connecter/')
+# @login_required(login_url='/Connecter/')
 def post_detail(request, year, month, day, post):
     post = get_object_or_404(Post, slug=post)
     comments = post.comments.filter(active=True)

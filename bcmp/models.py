@@ -60,3 +60,24 @@ class Comment(models.Model):
     
     def __str__(self):
         return 'Comment by {} on {}'.format(self.name, self.post)
+
+class Contact(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.EmailField(max_length=200)
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    date_added = models.DateField(auto_now_add=True)
+ 
+    def __str__(self):
+        return self.name + "-" +  self.name
+
+class NewsUsers(models.Model):
+    name = models.CharField(max_length = 30)
+    email = models.EmailField()
+    date_added = models.DateField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "NewsUser"
+        verbose_name_plural = "NewsUsers"
+        def __str__(self):
+            return self.email

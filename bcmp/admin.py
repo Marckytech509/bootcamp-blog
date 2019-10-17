@@ -5,6 +5,18 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 
+from .models import NewsUsers, Contact
+
+
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display =('email','date_added',)
+admin.site.register(NewsUsers, NewsletterAdmin)
+
+class ContactAdmin(admin.ModelAdmin):
+    list_display =('email','date_added',)
+admin.site.register(Contact, ContactAdmin)
+
+
 class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
